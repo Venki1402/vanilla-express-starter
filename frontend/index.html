@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calci</title>
+    <script>
+        const populateDiv = async () => {
+            let a = document.getElementById("num1").value;
+            let b = document.getElementById("num2").value;
+
+            if (!a || !b) {
+                document.getElementById("result").innerText =
+                    "Please enter valid numbers!";
+                return;
+            }
+
+            try {
+                const body = { a, b };
+
+                const res = await fetch("http://localhost:3000/api/add", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(body),
+                });
+
+                if (!res.ok) {
+                    throw new Error("Failed to fetch");
+                }
+
+                const result = await res.text();
+                document.getElementById("result").innerText = result;
+            } catch (error) {
+                console.error("Error:", error);
+                document.getElementById("result").innerText = "Something went wrong!";
+            }
+        };
+    </script>
+</head>
+
+<body>
+    <h1>Calci</h1>
+    <input type="number" id="num1" placeholder="First number" />
+    <input type="number" id="num2" placeholder="Second number" />
+    <button onclick="populateDiv()">Add</button>
+    <h3 id="result">0</h3>
+</body>
+
+</html>
